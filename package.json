@@ -1,0 +1,8 @@
+{
+  "name": "tasking",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:jplps/tasking.git",
+  "author": "jplps <joao.pedro.pacheco@hotmail.com>",
+  "license": "MIT"
+}
