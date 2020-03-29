@@ -1,4 +1,4 @@
-// Exporting db config from elephantsql
+// Exporting db config from dockerized postgres
 module.exports = {
 	dialect: 'postgres',
 	host: 'localhost',
