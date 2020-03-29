@@ -1,3 +1,4 @@
+// Informing sequelize the access credentials
 const path = require('path');
 
 module.exports = {
