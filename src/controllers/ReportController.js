@@ -32,6 +32,8 @@ module.exports = {
 			return res.status(400).json({ error: 'You have to be logged in to read Tasks by date.' });
 		}
 
+		// Not working yet
+		// See Operators in https://sequelize.org/v5/manual/querying.html#operators
 		const data = date + '%';
 		console.log(data)
 		const tasks = await Task.findAll({
