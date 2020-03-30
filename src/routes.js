@@ -9,14 +9,16 @@ routes.get('/', (req, res) => {
 	return res.json({ hello: 'World' });
 })
 
-// Get Users list
-routes.get('/users', UserController.index);
-// Create user registry
-routes.post('/users', UserController.store);
+// Users CRUD
+routes.get('/users/:user_id', UserController.index);
+routes.post('/users/:user_id', UserController.store);
+routes.put('/users/:user_id', UserController.update);
+routes.delete('/users/:user_id', UserController.delete);
 
-// Tasks by User
-routes.get('/users/:owner_id/tasks', TaskController.index);
-// Create task registry with routing
-routes.post('/users/:owner_id/tasks', TaskController.store);
+// Tasks CRUD
+routes.get('/users/:user_id/tasks', TaskController.index);
+routes.post('/users/:user_id/tasks', TaskController.store);
+routes.put('/users/:user_id/tasks', TaskController.update);
+routes.delete('/users/:user_id/tasks', TaskController.delete);
 
 module.exports = routes;
