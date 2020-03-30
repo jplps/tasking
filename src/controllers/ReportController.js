@@ -99,8 +99,6 @@ module.exports = {
 				average_response: user.tasks.length === 0 ? 0 : msToTime(averageResponse),
 			};
 
-			console.log(userPerformance);
-
 			return userPerformance;
 		});
 
