@@ -11,8 +11,29 @@ module.exports = {
 			return res.status(400).json({ error: 'You have to be logged in to read all Tasks.' });
 		}
 
+		const tasks = await Task.findAll();
+
+		return res.json(tasks);
+	},
+
+	// async tasksByDate(req, res) {},
+	// async tasksByDepartment(req, res) {},
+	// async tasksByDescription(req, res) {},
+	// async tasksByStatus(req, res) {},
+	// async tasksByType(req, res) {},
+
+	async tasksByUser(req, res) {
+		const { user_id } = req.params;
+		const { id } = req.body
+
+		const logged = await User.findByPk(user_id);
+
+		if (!logged) {
+			return res.status(400).json({ error: 'You have to be logged in to read all Tasks.' });
+		}
+
 		// Find methods recieves an object that allows to include the association
-		const user = await User.findByPk(user_id, {
+		const user = await User.findByPk(id, {
 			// The User model needs to have this relation bind
 			include: { association: 'tasks' }
 		});
