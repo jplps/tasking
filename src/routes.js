@@ -16,7 +16,9 @@ routes.post('/users', UserController.store);
 
 // Tasks by User
 routes.get('/users/:owner_id/tasks', TaskController.index);
-// Create task registry with routing
+// Task CRUD
 routes.post('/users/:owner_id/tasks', TaskController.store);
+routes.put('/users/:owner_id/tasks', TaskController.update);
+routes.delete('/users/:owner_id/tasks', TaskController.delete);
 
 module.exports = routes;

@@ -30,5 +30,49 @@ module.exports = {
 		});
 
 		return res.json(task);
-	}
+	},
+
+	async update(req, res) {
+		// We need a User to edit a task!
+		const { owner_id } = req.params;
+		const { id, description, type, status } = req.body;
+
+		const user = await User.findByPk(owner_id);
+
+		if (!user) {
+			return res.status(400).json({ error: 'User not found.' });
+		}
+
+		// Finding task
+		const task = await Task.findOne({
+			where: { id }
+		});
+
+		// Update it
+		await task.update({ description, type, status });
+
+		return res.json(task);
+	},
+
+	async delete(req, res) {
+		// We need a User to delete a task!
+		const { owner_id } = req.params;
+		const { id } = req.body;
+
+		const user = await User.findByPk(owner_id);
+
+		if (!user) {
+			return res.status(400).json({ error: 'User not found.' });
+		}
+
+		// Finding task
+		const task = await Task.findOne({
+			where: { id }
+		});
+
+		// Delete it!
+		await task.destroy();
+
+		return res.json();
+	},
 };
