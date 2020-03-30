@@ -19,14 +19,9 @@ routes.put('/users/:user_id/tasks', TaskController.update);
 routes.delete('/users/:user_id/tasks', TaskController.delete);
 
 // Reports
-// User specific attended tasks amount
-routes.get('/users/:user_id/report/user/attendedamount', ReportController.tasksAmountByUser);
-// Response time by user
-routes.get('/users/:user_id/report/user/responsetime', ReportController.tasksResponseTimeByUser);
-// Tasks by user
 routes.get('/users/:user_id/report/tasks/byuser', ReportController.tasksByUser);
-// Tasks by date
 routes.get('/users/:user_id/report/tasks/bydate', ReportController.tasksByDate);
+routes.get('/users/:user_id/report/performance/users', ReportController.usersPerformances);
 
 
 module.exports = routes;
