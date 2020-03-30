@@ -11,6 +11,11 @@ class User extends Model {
 			sequelize
 		})
 	}
+
+	// Create tasks relation
+	static associate(models) {
+		this.hasMany(models.Task, { foreignKey: 'owner_id', as: 'tasks' });
+	}
 }
 
 module.exports = User;
