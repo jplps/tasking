@@ -37,7 +37,7 @@ module.exports = {
 		const tasks = await Task.findAll({
 			where: {
 				createdAt: {
-					[Op.iLike]: date
+					[Op.startsWith]: date
 				}
 			}
 		});
