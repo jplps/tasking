@@ -25,15 +25,12 @@ module.exports = {
 	},
 
 	async create(req, res) {
-		// We need a User to create a task!
 		const { user_id } = req;
 		const { description, type, status } = req.body;
 
-		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged to create a Task.' });
-			}
+		console.log(description, type, status);
 
+		try {
 			const task = await Task.create({
 				description, type, status, owner_id: user_id
 			});
@@ -70,7 +67,6 @@ module.exports = {
 	},
 
 	async delete(req, res) {
-		// We need a User to delete a task!
 		const { id } = req.body;
 
 		try {
