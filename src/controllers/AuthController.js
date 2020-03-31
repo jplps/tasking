@@ -1,4 +1,7 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const authConfig = require('../config/auth');
 
 const User = require('../models/User');
 
@@ -8,17 +11,17 @@ module.exports = {
 
 		try {
 			if (await User.findOne({ where: { email } })) {
-				return res.json({ err: 'A user with this email already exists.' })
+				return res.status(400).json({ err: 'A user with this email already exists.' })
 			}
 
 			const password = await bcrypt.hash(req.body.password, 10);
 
 			const user = await User.create({ name, email, password });
 
-			return res.json(user);
+			return res.status(200).json(user);
 		} catch (err) {
 			console.log(err);
-			return res.json({ err: 'User registration failed. See DB console for more info about the error.' });
+			return res.status(400).json({ err: 'User registration failed. See DB console for more info about the error.' });
 		}
 	},
 
@@ -31,20 +34,29 @@ module.exports = {
 			});
 
 			if (!user) {
-				return res.json({ err: 'User not found.' });
+				return res.status(400).json({ err: 'User not found.' });
 			}
 
 			if (!await bcrypt.compare(password, user.password)) {
-				return res.json({ err: 'Invalid password.' });
+				return res.status(400).json({ err: 'Invalid password.' });
 			}
 
-			return res.json({
-				id: user.id,
-				name: user.name,
-				email: user.email,
+			const token = jwt.sign(
+				{ id: user.id },
+				authConfig.secret,
+				{ expiresIn: 86400 },
+			);
+
+			return res.status(200).json({
+				user: {
+					id: user.id,
+					name: user.name,
+					email: user.email,
+				},
+				token
 			});
 		} catch (err) {
-			return res.json({ err });
+			return res.status(400).json({ err });
 		}
-	}
+	},
 };
