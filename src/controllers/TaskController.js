@@ -5,25 +5,27 @@ module.exports = {
 	async index(req, res) {
 		const { user_id } = req.params;
 
-		const logged = await User.findByPk(user_id);
-
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged in to read all Tasks.' });
-		}
-
-		const user = await User.findByPk(user_id, {
-			include: { association: 'tasks' }
-		});
-
-		// Grabbing tasks and filtering open ones
-		const tasks = user.tasks.filter(task => {
-			if (task.status === 'open') {
-				return true;
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).json({ error: 'You have to be logged in to read all Tasks.' });
 			}
-			return false;
-		}).map(task => { return task; });
 
-		return res.json(tasks);
+			const user = await User.findByPk(user_id, {
+				include: { association: 'tasks' }
+			});
+
+			// Grabbing tasks and filtering open ones
+			const tasks = user.tasks.filter(task => {
+				if (task.status === 'open') {
+					return true;
+				}
+				return false;
+			}).map(task => { return task; });
+
+			return res.json(tasks);
+		} catch (err) {
+			return res.json({ err });
+		}
 	},
 
 	async store(req, res) {
@@ -31,17 +33,19 @@ module.exports = {
 		const { user_id } = req.params;
 		const { description, type, status } = req.body;
 
-		const logged = await User.findByPk(user_id);
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).json({ error: 'You have to be logged to create a Task.' });
+			}
 
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged to create a Task.' });
+			const task = await Task.create({
+				description, type, status, owner_id: user_id
+			});
+
+			return res.json(task);
+		} catch (err) {
+			return res.json({ err });
 		}
-
-		const task = await Task.create({
-			description, type, status, owner_id: user_id
-		});
-
-		return res.json(task);
 	},
 
 	async update(req, res) {
@@ -49,27 +53,30 @@ module.exports = {
 		const { user_id } = req.params;
 		const { id, description, type, status } = req.body;
 
-		const logged = await User.findByPk(user_id);
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).json({ error: 'You have to be logged to edit a Task.' });
+			}
 
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged to edit a Task.' });
+			// Finding task
+			const task = await Task.findOne({
+				where: { id }
+			});
+
+			// If the task is done, status = closed, set finished_at
+			let finished_at = null;
+			if (status === "closed") {
+				finished_at = new Date();
+			}
+
+			// Update it
+			await task.update({ description, type, status, finished_at });
+
+			return res.json(task);
+
+		} catch (err) {
+			return res.json({ err });
 		}
-
-		// Finding task
-		const task = await Task.findOne({
-			where: { id }
-		});
-
-		// If the task is done, status = closed, set finished_at
-		let finished_at = null;
-		if (status === "closed") {
-			finished_at = new Date();
-		}
-
-		// Update it
-		await task.update({ description, type, status, finished_at });
-
-		return res.json(task);
 	},
 
 	async delete(req, res) {
@@ -77,20 +84,22 @@ module.exports = {
 		const { user_id } = req.params;
 		const { id } = req.body;
 
-		const logged = await User.findByPk(user_id);
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).json({ error: 'You have to be logged to delete a Task.' });
+			}
 
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged to delete a Task.' });
+			// Finding task
+			const task = await Task.findOne({
+				where: { id }
+			});
+
+			// Delete it!
+			await task.destroy();
+
+			return res.json('Task destroyed.');
+		} catch (err) {
+			return res.json({ err });
 		}
-
-		// Finding task
-		const task = await Task.findOne({
-			where: { id }
-		});
-
-		// Delete it!
-		await task.destroy();
-
-		return res.json('Task destroyed.');
 	},
 };
