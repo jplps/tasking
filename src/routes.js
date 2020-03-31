@@ -8,7 +8,8 @@ const AuthController = require('./controllers/AuthController');
 const routes = express.Router();
 
 // Authentication service
-routes.get('/auth', AuthController.index);
+routes.post('/auth/signup', AuthController.signUp);
+routes.post('/auth/signin', AuthController.signIn);
 
 // Users CRUD
 routes.post('/users/:user_id', UserController.create);
