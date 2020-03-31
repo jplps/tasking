@@ -5,7 +5,7 @@ const User = require('../models/User');
 module.exports = {
 	async tasksByUser(req, res) {
 		const { user_id } = req.params;
-		const { id } = req.body
+		const { id } = req.body;
 
 		const logged = await User.findByPk(user_id);
 
@@ -34,12 +34,10 @@ module.exports = {
 
 		// Not working yet
 		// See Operators in https://sequelize.org/v5/manual/querying.html#operators
-		const data = date + '%';
-		console.log(data)
 		const tasks = await Task.findAll({
 			where: {
 				createdAt: {
-					[Op.iLike]: data
+					[Op.iLike]: date
 				}
 			}
 		});
@@ -48,9 +46,38 @@ module.exports = {
 	},
 
 	// async tasksByDepartment(req, res) {},
-	// async tasksByDescription(req, res) {},
-	// async tasksByStatus(req, res) {},
-	// async tasksByType(req, res) {},
+
+	async tasksDTS(req, res) {
+		const { user_id } = req.params;
+
+		// Getting vars to use, setting to null if they don't come in req.body
+		let description = null,
+			type = null,
+			status = null;
+
+		if (req.body.description) { description = req.body.description; }
+		else if (req.body.type) { type = req.body.type; }
+		else if (req.body.status) { status = req.body.status; }
+
+		const logged = await User.findByPk(user_id);
+
+		if (!logged) {
+			return res.status(400).json({ error: 'You have to be logged in to read Tasks by User.' });
+		}
+
+		// Allow to search for description, type or status
+		const tasks = await Task.findAll({
+			where: {
+				[Op.or]: [
+					{ description },
+					{ type },
+					{ status }
+				]
+			}
+		});
+
+		return res.json(tasks);
+	},
 
 	async usersPerformances(req, res) {
 		const { user_id } = req.params;

@@ -21,7 +21,7 @@ routes.delete('/users/:user_id/tasks', TaskController.delete);
 // Reports
 routes.get('/users/:user_id/report/tasks/byuser', ReportController.tasksByUser);
 routes.get('/users/:user_id/report/tasks/bydate', ReportController.tasksByDate);
+routes.get('/users/:user_id/report/tasks/byDTS', ReportController.tasksDTS);
 routes.get('/users/:user_id/report/performance/users', ReportController.usersPerformances);
-
 
 module.exports = routes;
