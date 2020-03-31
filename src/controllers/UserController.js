@@ -45,7 +45,7 @@ module.exports = {
 		This method isn't working. Couldn't find sequelize ENUM update 
 		treatment.
 		Also, somehow I can't update only the fields that comes in body 
-		with [Op.or] like in ReportConroller.tasksDTS
+		with [Op.or] like in ReportConroller.tasksDTS.
 
 	*/
 	async update(req, res) {

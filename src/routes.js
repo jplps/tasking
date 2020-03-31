@@ -13,7 +13,10 @@ routes.get('/', AuthController.index);
 // Users CRUD
 routes.post('/users/:user_id', UserController.create);
 routes.get('/users/:user_id', UserController.read);
-routes.put('/users/:user_id', UserController.update);
+
+// Bellow method not working. See the warning inside it!
+// routes.put('/users/:user_id', UserController.update);
+
 routes.delete('/users/:user_id', UserController.delete);
 
 // Tasks CRUD
@@ -24,7 +27,10 @@ routes.delete('/users/:user_id/tasks', TaskController.delete);
 
 // Reports
 routes.get('/users/:user_id/report/tasks/byuser', ReportController.tasksByUser);
-routes.get('/users/:user_id/report/tasks/bydate', ReportController.tasksByDate);
+
+// Bellow method not working. See the warning inside it!
+// routes.get('/users/:user_id/report/tasks/bydate', ReportController.tasksByDate);
+
 routes.get('/users/:user_id/report/tasks/byDTS', ReportController.tasksDTS);
 routes.get('/users/:user_id/report/performance/users', ReportController.usersPerformances);
 

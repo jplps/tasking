@@ -30,7 +30,7 @@ module.exports = {
 
 		This method isn't working. Couldn't find the solution for the date
 		format, to apply the regex like "2020-03-30%" to deal with the 
-		[Op.startsWith]
+		[Op.startsWith].
 
 	*/
 	async tasksByDate(req, res) {
