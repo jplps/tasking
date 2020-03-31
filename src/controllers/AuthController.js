@@ -11,17 +11,17 @@ module.exports = {
 
 		try {
 			if (await User.findOne({ where: { email } })) {
-				return res.status(400).json({ err: 'A user with this email already exists.' })
+				return res.status(400).send({ err: 'A user with this email already exists.' })
 			}
 
 			const password = await bcrypt.hash(req.body.password, 10);
 
 			const user = await User.create({ name, email, password });
 
-			return res.status(200).json(user);
+			return res.status(200).send(user);
 		} catch (err) {
 			console.log(err);
-			return res.status(400).json({ err: 'User registration failed. See DB console for more info about the error.' });
+			return res.status(400).send({ err: 'User registration failed. See DB console for more info about the error.' });
 		}
 	},
 
@@ -34,11 +34,11 @@ module.exports = {
 			});
 
 			if (!user) {
-				return res.status(400).json({ err: 'User not found.' });
+				return res.status(400).send({ err: 'User not found.' });
 			}
 
 			if (!await bcrypt.compare(password, user.password)) {
-				return res.status(400).json({ err: 'Invalid password.' });
+				return res.status(400).send({ err: 'Invalid password.' });
 			}
 
 			const token = jwt.sign(
@@ -47,7 +47,7 @@ module.exports = {
 				{ expiresIn: 86400 },
 			);
 
-			return res.status(200).json({
+			return res.status(200).send({
 				user: {
 					id: user.id,
 					name: user.name,
@@ -56,7 +56,7 @@ module.exports = {
 				token
 			});
 		} catch (err) {
-			return res.status(400).json({ err });
+			return res.status(400).send({ err });
 		}
 	},
 };

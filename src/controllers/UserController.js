@@ -9,14 +9,14 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to read all Users.' });
+				return res.status(400).send({ error: 'You have to be logged in to read all Users.' });
 			}
 
 			const users = await User.findAll();
 
-			return res.json(users);
+			return res.send(users);
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -26,16 +26,16 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to create a User.' });
+				return res.status(400).send({ error: 'You have to be logged in to create a User.' });
 			}
 
 			const password = await bcrypt.hash(req.body.password, 10);
 
 			const user = await User.create({ name, email, password });
 
-			return res.json(user);
+			return res.send(user);
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -64,7 +64,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to update a User.' });
+				return res.status(400).send({ error: 'You have to be logged in to update a User.' });
 			}
 			// Finding user to update
 			const user = await User.findOne({
@@ -80,10 +80,10 @@ module.exports = {
 				]
 			});
 
-			return res.json(user);
+			return res.send(user);
 		} catch (err) {
 			console.log(err);
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -94,7 +94,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to delete a User.' });
+				return res.status(400).send({ error: 'You have to be logged in to delete a User.' });
 			}
 
 			// Finding user
@@ -105,9 +105,9 @@ module.exports = {
 			// Delete it!
 			await user.destroy();
 
-			return res.json('User destroyed.');
+			return res.send('User destroyed.');
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 };

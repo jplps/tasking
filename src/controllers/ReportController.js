@@ -10,7 +10,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to read Tasks by User.' });
+				return res.status(400).send({ error: 'You have to be logged in to read Tasks by User.' });
 			}
 
 			// Find methods recieves an object that allows to include the association
@@ -19,9 +19,9 @@ module.exports = {
 				include: { association: 'tasks' }
 			});
 
-			return res.json(user.tasks);
+			return res.status(200).send(user.tasks);
 		} catch (err) {
-			return res.json({ err });
+			return res.status(400).send({ err });
 		}
 	},
 
@@ -39,7 +39,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to read Tasks by date.' });
+				return res.status(400).send({ error: 'You have to be logged in to read Tasks by date.' });
 			}
 
 			// Not working!
@@ -52,9 +52,9 @@ module.exports = {
 				}
 			});
 
-			return res.json(tasks);
+			return res.status(200).send(tasks);
 		} catch (err) {
-			return res.json({ err });
+			return res.status(400).send({ err });
 		}
 	},
 
@@ -74,7 +74,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to read Tasks by User.' });
+				return res.status(400).send({ error: 'You have to be logged in to read Tasks by User.' });
 			}
 
 			// Allow to search for description, type or status
@@ -88,9 +88,9 @@ module.exports = {
 				}
 			});
 
-			return res.json(tasks);
+			return res.status(200).send(tasks);
 		} catch (err) {
-			return res.json({ err });
+			return res.status(400).send({ err });
 		}
 	},
 
@@ -113,7 +113,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to read all Tasks by User.' });
+				return res.status(400).send({ error: 'You have to be logged in to read all Tasks by User.' });
 			}
 
 			// Find all users
@@ -145,9 +145,9 @@ module.exports = {
 				return userPerformance;
 			});
 
-			return res.json(usersPerformances);
+			return res.status(200).send(usersPerformances);
 		} catch (err) {
-			return res.json({ err });
+			return res.status(400).send({ err });
 		}
 	},
 };

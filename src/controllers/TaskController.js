@@ -7,7 +7,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged in to read all Tasks.' });
+				return res.status(400).send({ error: 'You have to be logged in to read all Tasks.' });
 			}
 
 			const user = await User.findByPk(user_id, {
@@ -22,9 +22,9 @@ module.exports = {
 				return false;
 			}).map(task => { return task; });
 
-			return res.json(tasks);
+			return res.send(tasks);
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -35,16 +35,16 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged to create a Task.' });
+				return res.status(400).send({ error: 'You have to be logged to create a Task.' });
 			}
 
 			const task = await Task.create({
 				description, type, status, owner_id: user_id
 			});
 
-			return res.json(task);
+			return res.send(task);
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -55,7 +55,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged to edit a Task.' });
+				return res.status(400).send({ error: 'You have to be logged to edit a Task.' });
 			}
 
 			// Finding task
@@ -72,10 +72,10 @@ module.exports = {
 			// Update it
 			await task.update({ description, type, status, finished_at });
 
-			return res.json(task);
+			return res.send(task);
 
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -86,7 +86,7 @@ module.exports = {
 
 		try {
 			if (!await User.findByPk(user_id)) {
-				return res.status(400).json({ error: 'You have to be logged to delete a Task.' });
+				return res.status(400).send({ error: 'You have to be logged to delete a Task.' });
 			}
 
 			// Finding task
@@ -97,9 +97,9 @@ module.exports = {
 			// Delete it!
 			await task.destroy();
 
-			return res.json('Task destroyed.');
+			return res.send('Task destroyed.');
 		} catch (err) {
-			return res.json({ err });
+			return res.send({ err });
 		}
 	},
 };
