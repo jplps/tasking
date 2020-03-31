@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+
 const Task = require('../models/Task');
 const User = require('../models/User');
 
@@ -7,42 +8,54 @@ module.exports = {
 		const { user_id } = req.params;
 		const { id } = req.body;
 
-		const logged = await User.findByPk(user_id);
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).send({ error: 'You have to be logged in to read Tasks by User.' });
+			}
 
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged in to read Tasks by User.' });
+			// Find methods recieves an object that allows to include the association
+			const user = await User.findByPk(id, {
+				// The User model needs to have this relation bind
+				include: { association: 'tasks' }
+			});
+
+			return res.status(200).send(user.tasks);
+		} catch (err) {
+			return res.status(400).send({ err });
 		}
-
-		// Find methods recieves an object that allows to include the association
-		const user = await User.findByPk(id, {
-			// The User model needs to have this relation bind
-			include: { association: 'tasks' }
-		});
-
-		return res.json(user.tasks);
 	},
 
+	/*
+		*** WARNING ***
+
+		This method isn't working. Couldn't find the solution for the date
+		format, to apply the regex like "2020-03-30%" to deal with the 
+		[Op.startsWith].
+
+	*/
 	async tasksByDate(req, res) {
 		const { user_id } = req.params;
 		const { date } = req.body
 
-		const logged = await User.findByPk(user_id);
-
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged in to read Tasks by date.' });
-		}
-
-		// Not working yet
-		// See Operators in https://sequelize.org/v5/manual/querying.html#operators
-		const tasks = await Task.findAll({
-			where: {
-				createdAt: {
-					[Op.startsWith]: date
-				}
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).send({ error: 'You have to be logged in to read Tasks by date.' });
 			}
-		});
 
-		return res.json(tasks);
+			// Not working!
+			// See Operators in https://sequelize.org/v5/manual/querying.html#operators
+			const tasks = await Task.findAll({
+				where: {
+					createdAt: {
+						[Op.startsWith]: date
+					}
+				}
+			});
+
+			return res.status(200).send(tasks);
+		} catch (err) {
+			return res.status(400).send({ err });
+		}
 	},
 
 	// async tasksByDepartment(req, res) {},
@@ -59,37 +72,30 @@ module.exports = {
 		else if (req.body.type) { type = req.body.type; }
 		else if (req.body.status) { status = req.body.status; }
 
-		const logged = await User.findByPk(user_id);
-
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged in to read Tasks by User.' });
-		}
-
-		// Allow to search for description, type or status
-		const tasks = await Task.findAll({
-			where: {
-				[Op.or]: [
-					{ description },
-					{ type },
-					{ status }
-				]
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).send({ error: 'You have to be logged in to read Tasks by User.' });
 			}
-		});
 
-		return res.json(tasks);
+			// Allow to search for description, type or status
+			const tasks = await Task.findAll({
+				where: {
+					[Op.or]: [
+						{ description },
+						{ type },
+						{ status }
+					]
+				}
+			});
+
+			return res.status(200).send(tasks);
+		} catch (err) {
+			return res.status(400).send({ err });
+		}
 	},
 
 	async usersPerformances(req, res) {
 		const { user_id } = req.params;
-
-		const logged = await User.findByPk(user_id);
-
-		if (!logged) {
-			return res.status(400).json({ error: 'You have to be logged in to read all Tasks by User.' });
-		}
-
-		// Find all users
-		const users = await User.findAll({ include: { association: 'tasks' } });
 
 		// Converting time stamp function
 		function msToTime(duration) {
@@ -105,32 +111,43 @@ module.exports = {
 			return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 		}
 
-		// Get each user info and set performances object
-		const usersPerformances = users.map(user => {
-			// Get the response time - between creation and finish
-			let responseSum = 0;
-			let responseCounter = 0;
+		try {
+			if (!await User.findByPk(user_id)) {
+				return res.status(400).send({ error: 'You have to be logged in to read all Tasks by User.' });
+			}
 
-			user.tasks.map(task => {
-				if (task.finished_at !== null) {
-					responseSum += task.finished_at.getTime() - task.createdAt.getTime();
-					responseCounter++
-				}
-			})
+			// Find all users
+			const users = await User.findAll({ include: { association: 'tasks' } });
 
-			// Calculating average response
-			const averageResponse = responseSum / responseCounter;
+			// Get each user info and set performances object
+			const usersPerformances = users.map(user => {
+				// Get the response time - between creation and finish
+				let responseSum = 0;
+				let responseCounter = 0;
 
-			// Returning each object with performance values and user reference
-			const userPerformance = {
-				username: user.name,
-				attended_amount: user.tasks.length,
-				average_response: user.tasks.length === 0 ? 0 : msToTime(averageResponse),
-			};
+				user.tasks.map(task => {
+					if (task.finished_at !== null) {
+						responseSum += task.finished_at.getTime() - task.createdAt.getTime();
+						responseCounter++
+					}
+				})
 
-			return userPerformance;
-		});
+				// Calculating average response
+				const averageResponse = responseSum / responseCounter;
 
-		return res.json(usersPerformances);
+				// Returning each object with performance values and user reference
+				const userPerformance = {
+					username: user.name,
+					attended_amount: user.tasks.length,
+					average_response: user.tasks.length === 0 ? 0 : msToTime(averageResponse),
+				};
+
+				return userPerformance;
+			});
+
+			return res.status(200).send(usersPerformances);
+		} catch (err) {
+			return res.status(400).send({ err });
+		}
 	},
 };

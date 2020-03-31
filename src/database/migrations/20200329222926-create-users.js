@@ -17,6 +17,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: Sequelize.ENUM('ADMIN', 'AGENT'),
+        allowNull: false,
+        defaultValue: 'AGENT',
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
