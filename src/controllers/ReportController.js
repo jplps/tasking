@@ -5,14 +5,9 @@ const User = require('../models/User');
 
 module.exports = {
 	async tasksByUser(req, res) {
-		const { user_id } = req.params;
 		const { id } = req.body;
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to read Tasks by User.' });
-			}
-
 			// Find methods recieves an object that allows to include the association
 			const user = await User.findByPk(id, {
 				// The User model needs to have this relation bind
@@ -34,14 +29,9 @@ module.exports = {
 
 	*/
 	async tasksByDate(req, res) {
-		const { user_id } = req.params;
 		const { date } = req.body
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to read Tasks by date.' });
-			}
-
 			// Not working!
 			// See Operators in https://sequelize.org/v5/manual/querying.html#operators
 			const tasks = await Task.findAll({
@@ -61,8 +51,6 @@ module.exports = {
 	// async tasksByDepartment(req, res) {},
 
 	async tasksDTS(req, res) {
-		const { user_id } = req.params;
-
 		// Getting vars to use, setting to null if they don't come in req.body
 		let description = null,
 			type = null,
@@ -73,10 +61,6 @@ module.exports = {
 		else if (req.body.status) { status = req.body.status; }
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to read Tasks by User.' });
-			}
-
 			// Allow to search for description, type or status
 			const tasks = await Task.findAll({
 				where: {
@@ -95,8 +79,6 @@ module.exports = {
 	},
 
 	async usersPerformances(req, res) {
-		const { user_id } = req.params;
-
 		// Converting time stamp function
 		function msToTime(duration) {
 			let milliseconds = parseInt((duration % 1000) / 100),
@@ -112,10 +94,6 @@ module.exports = {
 		}
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to read all Tasks by User.' });
-			}
-
 			// Find all users
 			const users = await User.findAll({ include: { association: 'tasks' } });
 

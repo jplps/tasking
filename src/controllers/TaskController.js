@@ -3,13 +3,9 @@ const User = require('../models/User');
 
 module.exports = {
 	async read(req, res) {
-		const { user_id } = req.params;
+		const { user_id } = req;
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to read all Tasks.' });
-			}
-
 			const user = await User.findByPk(user_id, {
 				include: { association: 'tasks' }
 			});
@@ -30,7 +26,7 @@ module.exports = {
 
 	async create(req, res) {
 		// We need a User to create a task!
-		const { user_id } = req.params;
+		const { user_id } = req;
 		const { description, type, status } = req.body;
 
 		try {
@@ -49,15 +45,9 @@ module.exports = {
 	},
 
 	async update(req, res) {
-		// We need a User to edit a task!
-		const { user_id } = req.params;
 		const { id, description, type, status } = req.body;
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged to edit a Task.' });
-			}
-
 			// Finding task
 			const task = await Task.findOne({
 				where: { id }
@@ -81,14 +71,9 @@ module.exports = {
 
 	async delete(req, res) {
 		// We need a User to delete a task!
-		const { user_id } = req.params;
 		const { id } = req.body;
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged to delete a Task.' });
-			}
-
 			// Finding task
 			const task = await Task.findOne({
 				where: { id }

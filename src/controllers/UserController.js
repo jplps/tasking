@@ -5,13 +5,7 @@ const User = require('../models/User');
 
 module.exports = {
 	async read(req, res) {
-		const { user_id } = req.params;
-
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to read all Users.' });
-			}
-
 			const users = await User.findAll();
 
 			return res.send(users);
@@ -21,14 +15,9 @@ module.exports = {
 	},
 
 	async create(req, res) {
-		const { user_id } = req.params;
 		const { name, email } = req.body;
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to create a User.' });
-			}
-
 			const password = await bcrypt.hash(req.body.password, 10);
 
 			const user = await User.create({ name, email, password });
@@ -49,7 +38,6 @@ module.exports = {
 
 	*/
 	async update(req, res) {
-		const { user_id } = req.params;
 		const { id } = req.body;
 
 		let name = null,
@@ -63,9 +51,6 @@ module.exports = {
 		else if (req.body.role) { role = req.body.role; }
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to update a User.' });
-			}
 			// Finding user to update
 			const user = await User.findOne({
 				where: { id }
@@ -88,15 +73,9 @@ module.exports = {
 	},
 
 	async delete(req, res) {
-		// We need a User to delete another!
-		const { user_id } = req.params;
 		const { id } = req.body;
 
 		try {
-			if (!await User.findByPk(user_id)) {
-				return res.status(400).send({ error: 'You have to be logged in to delete a User.' });
-			}
-
 			// Finding user
 			const user = await User.findOne({
 				where: { id }
