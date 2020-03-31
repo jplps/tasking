@@ -22,5 +22,29 @@ module.exports = {
 		}
 	},
 
+	async signIn(req, res) {
+		const { email, password } = req.body;
 
+		try {
+			const user = await User.findOne({
+				where: { email }
+			});
+
+			if (!user) {
+				return res.json({ err: 'User not found.' });
+			}
+
+			if (!await bcrypt.compare(password, user.password)) {
+				return res.json({ err: 'Invalid password.' });
+			}
+
+			return res.json({
+				id: user.id,
+				name: user.name,
+				email: user.email,
+			});
+		} catch (err) {
+			return res.json({ err });
+		}
+	}
 };
