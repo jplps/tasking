@@ -11,10 +11,11 @@ Inside the main dir, run the command to get the Postgres containerized, and star
 
 ## Creating DB
 
-With the container running, let's create the db and execute the migrations (defines in src/migrations/)
+With the container running, let's create the db and execute the migrations & seeders
 
 		$ yarn sequelize db:create
 		$ yarn sequelize db:migrate
+		$ yarn sequelize db:seed:all
 
 ## Run Node Project
 
