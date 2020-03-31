@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+
 const Task = require('../models/Task');
 const User = require('../models/User');
 
@@ -24,6 +25,14 @@ module.exports = {
 		}
 	},
 
+	/*
+		*** WARNING ***
+
+		This method isn't working. Couldn't find the solution for the date
+		format, to apply the regex like "2020-03-30%" to deal with the 
+		[Op.startsWith]
+
+	*/
 	async tasksByDate(req, res) {
 		const { user_id } = req.params;
 		const { date } = req.body

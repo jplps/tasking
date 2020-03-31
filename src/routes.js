@@ -3,18 +3,22 @@ const express = require('express');
 const UserController = require('./controllers/UserController');
 const TaskController = require('./controllers/TaskController');
 const ReportController = require('./controllers/ReportController');
+const AuthController = require('./controllers/AuthController');
 
 const routes = express.Router();
 
+// Authentication service
+routes.get('/', AuthController.index);
+
 // Users CRUD
-routes.get('/users/:user_id', UserController.index);
-routes.post('/users/:user_id', UserController.store);
+routes.post('/users/:user_id', UserController.create);
+routes.get('/users/:user_id', UserController.read);
 routes.put('/users/:user_id', UserController.update);
 routes.delete('/users/:user_id', UserController.delete);
 
 // Tasks CRUD
-routes.get('/users/:user_id/tasks', TaskController.index);
-routes.post('/users/:user_id/tasks', TaskController.store);
+routes.post('/users/:user_id/tasks', TaskController.create);
+routes.get('/users/:user_id/tasks', TaskController.read);
 routes.put('/users/:user_id/tasks', TaskController.update);
 routes.delete('/users/:user_id/tasks', TaskController.delete);
 

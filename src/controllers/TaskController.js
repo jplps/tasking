@@ -2,7 +2,7 @@ const Task = require('../models/Task');
 const User = require('../models/User');
 
 module.exports = {
-	async index(req, res) {
+	async read(req, res) {
 		const { user_id } = req.params;
 
 		try {
@@ -28,7 +28,7 @@ module.exports = {
 		}
 	},
 
-	async store(req, res) {
+	async create(req, res) {
 		// We need a User to create a task!
 		const { user_id } = req.params;
 		const { description, type, status } = req.body;
