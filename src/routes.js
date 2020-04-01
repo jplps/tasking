@@ -14,20 +14,21 @@ const routes = express.Router();
 routes.post('/auth/signup', AuthController.signUp);
 routes.post('/auth/signin', AuthController.signIn);
 
-// Users CRUD
-routes.post('/users', authMiddleware, UserController.create);
-routes.get('/users', authMiddleware, UserController.read);
+// Users CRUD - Only ADMIN access
+routes.post('/users', authMiddleware, checkRole, UserController.create);
+routes.get('/users', authMiddleware, checkRole, UserController.read);
 // Bellow method not working. See the warning inside it!
-// routes.put('/users', authMiddleware, UserController.update);
-routes.delete('/users', authMiddleware, UserController.delete);
+// routes.put('/users', authMiddleware, checkRole, UserController.update);
+routes.delete('/users', authMiddleware, checkRole, UserController.delete);
 
 // Department
 
 // Tasks CRUD
-routes.post('/tasks', authMiddleware, checkRole, TaskController.create);
+routes.post('/tasks', authMiddleware, TaskController.create);
 routes.get('/tasks', authMiddleware, TaskController.read);
 routes.put('/tasks', authMiddleware, TaskController.update);
-routes.delete('/tasks', authMiddleware, TaskController.delete);
+// AGENT cannot delete tasks
+routes.delete('/tasks', authMiddleware, checkRole, TaskController.delete);
 
 // Reports
 routes.get('/tasks/byuser', authMiddleware, ReportController.tasksByUser);
