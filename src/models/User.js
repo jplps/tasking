@@ -9,6 +9,7 @@ class User extends Model {
 			email: DataTypes.STRING,
 			password: DataTypes.STRING,
 			role: DataTypes.ENUM('ADMIN', 'AGENT'),
+			department_id: DataTypes.INTEGER
 		}, {
 			sequelize
 		})
