@@ -8,9 +8,9 @@ module.exports = {
 		try {
 			const users = await User.findAll();
 
-			return res.send(users);
+			return res.status(200).send(users);
 		} catch (err) {
-			return res.send({ err });
+			return res.status(400).send({ err });
 		}
 	},
 
@@ -22,9 +22,9 @@ module.exports = {
 
 			const user = await User.create({ name, email, password });
 
-			return res.send(user);
+			return res.status(200).send(user);
 		} catch (err) {
-			return res.send({ err });
+			return res.status(400).send({ err });
 		}
 	},
 
@@ -65,10 +65,10 @@ module.exports = {
 				]
 			});
 
-			return res.send(user);
+			return res.status(200).send(user);
 		} catch (err) {
 			console.log(err);
-			return res.send({ err });
+			return res.status(400).send({ err });
 		}
 	},
 
@@ -84,9 +84,9 @@ module.exports = {
 			// Delete it!
 			await user.destroy();
 
-			return res.send('User destroyed.');
+			return res.status(200).send('User destroyed.');
 		} catch (err) {
-			return res.send({ err });
+			return res.status(400).send({ err });
 		}
 	},
 };

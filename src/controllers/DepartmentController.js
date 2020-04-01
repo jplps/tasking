@@ -1,5 +1,4 @@
-const Task = require('../models/Task');
-const User = require('../models/User');
+const Department = require('../models/Department');
 
 module.exports = {
 	async read(req, res) {
@@ -18,9 +17,9 @@ module.exports = {
 				return false;
 			}).map(task => { return task; });
 
-			return res.status(200).send(tasks);
+			return res.send(tasks);
 		} catch (err) {
-			return res.status(400).send({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -35,9 +34,9 @@ module.exports = {
 				description, type, status, owner_id: user_id
 			});
 
-			return res.status(200).send(task);
+			return res.send(task);
 		} catch (err) {
-			return res.status(400).send({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -59,10 +58,10 @@ module.exports = {
 			// Update it
 			await task.update({ description, type, status, finished_at });
 
-			return res.status(200).send(task);
+			return res.send(task);
 
 		} catch (err) {
-			return res.status(400).send({ err });
+			return res.send({ err });
 		}
 	},
 
@@ -78,9 +77,9 @@ module.exports = {
 			// Delete it!
 			await task.destroy();
 
-			return res.status(200).send('Task destroyed.');
+			return res.send('Task destroyed.');
 		} catch (err) {
-			return res.status(400).send({ err });
+			return res.send({ err });
 		}
 	},
 };
