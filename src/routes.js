@@ -1,3 +1,4 @@
+// Importing stuff to use
 const express = require('express');
 
 const DepartmentController = require('./controllers/DepartmentController');
@@ -42,6 +43,7 @@ routes.get('/tasks/byuser', authMiddleware, ReportController.tasksByUser);
 // routes.get('/report/tasks/bydate', authMiddleware, ReportController.tasksByDate);
 routes.get('/tasks/byDTS', authMiddleware, ReportController.tasksDTS);
 routes.get('/tasks/bydepartment', authMiddleware, ReportController.tasksByDepartment);
-routes.get('/users/performance', authMiddleware, ReportController.usersPerformances);
+routes.get('/users/performances', authMiddleware, ReportController.usersPerformances);
+routes.get('/departments/performances', authMiddleware, ReportController.departmentsPerformances);
 
 module.exports = routes;

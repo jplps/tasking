@@ -3,6 +3,19 @@ const { Op } = require('sequelize');
 const User = require('../models/User');
 const Task = require('../models/Task');
 
+function msToTime(duration) {
+	let milliseconds = parseInt((duration % 1000) / 100),
+		seconds = Math.floor((duration / 1000) % 60),
+		minutes = Math.floor((duration / (1000 * 60)) % 60),
+		hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+	hours = (hours < 10) ? "0" + hours : hours;
+	minutes = (minutes < 10) ? "0" + minutes : minutes;
+	seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+	return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+}
+
 module.exports = {
 	async tasksByUser(req, res) {
 		const { id } = req.body;
@@ -102,19 +115,56 @@ module.exports = {
 	},
 
 	async usersPerformances(req, res) {
-		// Converting time stamp function
-		function msToTime(duration) {
-			let milliseconds = parseInt((duration % 1000) / 100),
-				seconds = Math.floor((duration / 1000) % 60),
-				minutes = Math.floor((duration / (1000 * 60)) % 60),
-				hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+		try {
+			// Find all users
+			const users = await User.findAll({ include: { association: 'tasks' } });
 
-			hours = (hours < 10) ? "0" + hours : hours;
-			minutes = (minutes < 10) ? "0" + minutes : minutes;
-			seconds = (seconds < 10) ? "0" + seconds : seconds;
+			// Get each user info and set performances object
+			const usersPerformances = users.map(user => {
+				// Get the response time - between creation and finish
+				let responseSum = 0;
+				let responseCounter = 0;
 
-			return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+				user.tasks.map(task => {
+					if (task.finished_at !== null) {
+						responseSum += task.finished_at.getTime() - task.createdAt.getTime();
+						responseCounter++
+					}
+				})
+
+				// Calculating average response
+				const averageResponse = responseSum / responseCounter;
+
+				// Returning each object with performance values and user reference
+				const userPerformance = {
+					username: user.name,
+					attended_amount: user.tasks.length,
+
+					/* 
+						This rule does not apply when a user doesn't have any closed tasks
+						(don't know why yet). Also when seeding the db, tasks created already 
+						closed with the finished_at prop comes with an incredible response 
+						time = 00:00:00.0!
+					*/
+					average_response: user.tasks.length === 0 ? 0 : msToTime(averageResponse),
+				};
+
+				return userPerformance;
+			});
+
+			return res.status(200).send(usersPerformances);
+		} catch (err) {
+			return res.status(400).send({ err });
 		}
+	},
+
+	async departmentsPerformances(req, res) {
+
+		// Find all the departments
+		// Get all tasks
+		// Calculate each task performance
+		// Return the department performance
+
 
 		try {
 			// Find all users
@@ -140,7 +190,7 @@ module.exports = {
 				const userPerformance = {
 					username: user.name,
 					attended_amount: user.tasks.length,
-					average_response: user.tasks.length === 0 ? 0 : msToTime(averageResponse),
+					average_response: user.tasks.length === 0 ? '0' : msToTime(averageResponse),
 				};
 
 				return userPerformance;
