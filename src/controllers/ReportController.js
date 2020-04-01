@@ -148,7 +148,7 @@ module.exports = {
 						closed with the finished_at prop comes with an incredible response 
 						time = 00:00:00.0!
 					*/
-					average_response: user.tasks.length === 0 ? 0 : msToTime(averageResponse),
+					average_response: (isNaN(averageResponse) || user.tasks.length === 0) ? 0 : msToTime(averageResponse),
 				};
 
 				return userPerformance;
