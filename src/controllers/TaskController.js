@@ -28,8 +28,6 @@ module.exports = {
 		const { user_id } = req;
 		const { description, type, status } = req.body;
 
-		console.log(description, type, status);
-
 		try {
 			const task = await Task.create({
 				description, type, status, owner_id: user_id
