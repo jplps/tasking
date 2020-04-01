@@ -23,9 +23,9 @@ routes.get('/users', authMiddleware, checkRole, UserController.read);
 routes.delete('/users', authMiddleware, checkRole, UserController.delete);
 
 // Department
-routes.post('/departments', authMiddleware, DepartmentController.create);
-routes.get('/departments', authMiddleware, DepartmentController.read);
-routes.put('/departments', authMiddleware, DepartmentController.update);
+routes.post('/departments', authMiddleware, checkRole, DepartmentController.create);
+routes.get('/departments', authMiddleware, checkRole, DepartmentController.read);
+routes.put('/departments', authMiddleware, checkRole, DepartmentController.update);
 routes.delete('/departments', authMiddleware, checkRole, DepartmentController.delete);
 
 
