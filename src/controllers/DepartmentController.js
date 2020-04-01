@@ -11,7 +11,7 @@ module.exports = {
 
 	async create(req, res) {
 		try {
-			return res.send(task);
+			return res.send();
 		} catch (err) {
 			return res.send({ err });
 		}
@@ -19,7 +19,7 @@ module.exports = {
 
 	async update(req, res) {
 		try {
-			return res.send(task);
+			return res.send();
 		} catch (err) {
 			return res.send({ err });
 		}
@@ -27,7 +27,7 @@ module.exports = {
 
 	async delete(req, res) {
 		try {
-			return res.send('Task destroyed.');
+			return res.send('Department destroyed.');
 		} catch (err) {
 			return res.send({ err });
 		}
