@@ -6,6 +6,7 @@ const ReportController = require('./controllers/ReportController');
 const AuthController = require('./controllers/AuthController');
 
 const authMiddleware = require('./middlewares/auth');
+const checkRole = require('./middlewares/checkRole');
 
 const routes = express.Router();
 
@@ -20,8 +21,10 @@ routes.get('/users', authMiddleware, UserController.read);
 // routes.put('/users', authMiddleware, UserController.update);
 routes.delete('/users', authMiddleware, UserController.delete);
 
+// Department
+
 // Tasks CRUD
-routes.post('/tasks', authMiddleware, TaskController.create);
+routes.post('/tasks', authMiddleware, checkRole, TaskController.create);
 routes.get('/tasks', authMiddleware, TaskController.read);
 routes.put('/tasks', authMiddleware, TaskController.update);
 routes.delete('/tasks', authMiddleware, TaskController.delete);

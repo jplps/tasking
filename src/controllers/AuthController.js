@@ -47,6 +47,8 @@ module.exports = {
 				{ expiresIn: 86400 },
 			);
 
+			res.cookie('token', token, { httpOnly: true, expires: 86400 });
+
 			return res.status(200).send({
 				user: {
 					id: user.id,
