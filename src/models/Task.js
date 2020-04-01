@@ -6,8 +6,6 @@ class Task extends Model {
 		// Passing table fields
 		super.init({
 			description: DataTypes.STRING,
-			type: DataTypes.STRING,
-			status: DataTypes.STRING,
 			finished_at: DataTypes.DATE
 		}, {
 			sequelize
@@ -18,6 +16,9 @@ class Task extends Model {
 	static associate(models) {
 		// A task belongs to a user
 		this.belongsTo(models.User, { foreignKey: 'owner_id', as: 'owner' });
+		// A task has one type and one status
+		this.hasOne(models.TaskType, { foreignKey: 'type_id', as: 'type' });
+		this.hasOne(models.TaskStatus, { foreignKey: 'status_id', as: 'status' });
 	}
 }
 
