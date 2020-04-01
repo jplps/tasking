@@ -23,7 +23,7 @@ routes.get('/users', authMiddleware, checkRole, UserController.read);
 // routes.put('/users', authMiddleware, checkRole, UserController.update);
 routes.delete('/users', authMiddleware, checkRole, UserController.delete);
 
-// Department
+// Departments CRUD - Only ADMIN access
 routes.post('/departments', authMiddleware, checkRole, DepartmentController.create);
 routes.get('/departments', authMiddleware, checkRole, DepartmentController.read);
 routes.put('/departments', authMiddleware, checkRole, DepartmentController.update);
@@ -36,7 +36,11 @@ routes.put('/tasks', authMiddleware, TaskController.update);
 // AGENT cannot delete tasks
 routes.delete('/tasks', authMiddleware, checkRole, TaskController.delete);
 
-// Reports
+// Activity CRUD - Only create and edit
+routes.post('/activities', authMiddleware, TaskController.create);
+routes.put('/activities', authMiddleware, TaskController.update);
+
+// Reports - Logged access
 routes.get('/tasks/byuser', authMiddleware, ReportController.tasksByUser);
 // Bellow method not working. See the warning inside it!
 // routes.get('/report/tasks/bydate', authMiddleware, ReportController.tasksByDate);

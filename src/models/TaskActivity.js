@@ -15,6 +15,8 @@ class TaskActivity extends Model {
 	static associate(models) {
 		// An activity belongs to a task
 		this.belongsTo(models.Task, { foreignKey: 'task_id', as: 'activity' });
+		// An activity belongs to a user
+		this.belongsTo(models.User, { foreignKey: 'owner_id', as: 'owner' });
 	}
 }
 
