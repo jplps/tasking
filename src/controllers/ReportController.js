@@ -46,11 +46,12 @@ module.exports = {
 		const { date } = req.body
 
 		try {
-			// Not working!
+			// Not working!!!
 			// See Operators in https://sequelize.org/v5/manual/querying.html#operators
 			const tasks = await Task.findAll({
 				where: {
 					createdAt: {
+						// [Op.iLike]: date + '%'
 						[Op.startsWith]: date
 					}
 				}
@@ -164,7 +165,7 @@ module.exports = {
 			// Find all the departments
 			const departments = await Department.findAll();
 
-			let departmentsPerformances = [];
+			const departmentsPerformances = [];
 
 			// Get all departments tasks
 			for (const department of departments) {
@@ -199,7 +200,7 @@ module.exports = {
 				const departmentPerformance = {
 					department_name: department.name,
 					attended_amount: departmentTasks.length,
-					average_response: departmentTasks.length === 0 ? 0 : msToTime(averageResponse),
+					average_response: (isNaN(averageResponse) || departmentTasks.length === 0) ? 0 : msToTime(averageResponse),
 				};
 
 				// Store each department performance
@@ -209,7 +210,6 @@ module.exports = {
 			// Return the department performance
 			return res.status(200).send(departmentsPerformances);
 		} catch (err) {
-			console.log(err);
 			return res.status(400).send({ err });
 		}
 	},
