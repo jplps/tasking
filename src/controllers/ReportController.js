@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 
-const Task = require('../models/Task');
 const User = require('../models/User');
+const Task = require('../models/Task');
 
 module.exports = {
 	async tasksByUser(req, res) {
@@ -48,7 +48,29 @@ module.exports = {
 		}
 	},
 
-	// async tasksByDepartment(req, res) {},
+	async tasksByDepartment(req, res) {
+		// Get the department id
+		const { id } = req.body;
+
+		try {
+			// Find all the users in the department
+			const users = await User.findAll({ where: { department_id: id } });
+
+			const departmentTasks = [];
+
+			// For each user, find all tasks and return
+			for (const user of users) {
+				const tasks = await Task.findAll({ where: { owner_id: user.id } });
+				tasks.forEach(task => {
+					departmentTasks.push(task);
+				});
+			}
+
+			return res.status(200).send({ departmentTasks });
+		} catch (err) {
+			return res.status(400).send({ err });
+		}
+	},
 
 	async tasksDTS(req, res) {
 		// Getting vars to use, setting to null if they don't come in req.body
@@ -56,6 +78,7 @@ module.exports = {
 			type = null,
 			status = null;
 
+		// Check wich var we'll use
 		if (req.body.description) { description = req.body.description; }
 		else if (req.body.type) { type = req.body.type; }
 		else if (req.body.status) { status = req.body.status; }

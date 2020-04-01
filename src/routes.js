@@ -41,6 +41,7 @@ routes.get('/tasks/byuser', authMiddleware, ReportController.tasksByUser);
 // Bellow method not working. See the warning inside it!
 // routes.get('/report/tasks/bydate', authMiddleware, ReportController.tasksByDate);
 routes.get('/tasks/byDTS', authMiddleware, ReportController.tasksDTS);
+routes.get('/tasks/bydepartment', authMiddleware, ReportController.tasksByDepartment);
 routes.get('/users/performance', authMiddleware, ReportController.usersPerformances);
 
 module.exports = routes;
