@@ -29,7 +29,6 @@ routes.get('/departments', authMiddleware, checkRole, DepartmentController.read)
 routes.put('/departments', authMiddleware, checkRole, DepartmentController.update);
 routes.delete('/departments', authMiddleware, checkRole, DepartmentController.delete);
 
-
 // Tasks CRUD
 routes.post('/tasks', authMiddleware, TaskController.create);
 routes.get('/tasks', authMiddleware, TaskController.read);

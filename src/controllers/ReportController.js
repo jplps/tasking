@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 
+const Department = require('../models/Department');
 const User = require('../models/User');
 const Task = require('../models/Task');
 
@@ -130,7 +131,7 @@ module.exports = {
 						responseSum += task.finished_at.getTime() - task.createdAt.getTime();
 						responseCounter++
 					}
-				})
+				});
 
 				// Calculating average response
 				const averageResponse = responseSum / responseCounter;
@@ -159,45 +160,56 @@ module.exports = {
 	},
 
 	async departmentsPerformances(req, res) {
-
-		// Find all the departments
-		// Get all tasks
-		// Calculate each task performance
-		// Return the department performance
-
-
 		try {
-			// Find all users
-			const users = await User.findAll({ include: { association: 'tasks' } });
+			// Find all the departments
+			const departments = await Department.findAll();
 
-			// Get each user info and set performances object
-			const usersPerformances = users.map(user => {
+			let departmentsPerformances = [];
+
+			// Get all departments tasks
+			for (const department of departments) {
+				const users = await User.findAll({ where: { department_id: department.id } });
+
+				const departmentTasks = [];
+
+				// For each user, find all tasks and store in array
+				for (const user of users) {
+					const tasks = await Task.findAll({ where: { owner_id: user.id } });
+					tasks.forEach(task => {
+						departmentTasks.push(task);
+					});
+				}
+
 				// Get the response time - between creation and finish
 				let responseSum = 0;
 				let responseCounter = 0;
 
-				user.tasks.map(task => {
+				// Calculate each task performance
+				departmentTasks.map(task => {
 					if (task.finished_at !== null) {
 						responseSum += task.finished_at.getTime() - task.createdAt.getTime();
 						responseCounter++
 					}
-				})
+				});
 
 				// Calculating average response
 				const averageResponse = responseSum / responseCounter;
 
 				// Returning each object with performance values and user reference
-				const userPerformance = {
-					username: user.name,
-					attended_amount: user.tasks.length,
-					average_response: user.tasks.length === 0 ? '0' : msToTime(averageResponse),
+				const departmentPerformance = {
+					department_name: department.name,
+					attended_amount: departmentTasks.length,
+					average_response: departmentTasks.length === 0 ? 0 : msToTime(averageResponse),
 				};
 
-				return userPerformance;
-			});
+				// Store each department performance
+				departmentsPerformances.push(departmentPerformance);
+			}
 
-			return res.status(200).send(usersPerformances);
+			// Return the department performance
+			return res.status(200).send(departmentsPerformances);
 		} catch (err) {
+			console.log(err);
 			return res.status(400).send({ err });
 		}
 	},
