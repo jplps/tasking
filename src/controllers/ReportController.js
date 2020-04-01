@@ -104,8 +104,8 @@ module.exports = {
 				where: {
 					[Op.or]: [
 						{ description },
-						{ type },
-						{ status }
+						{ type_id: type },
+						{ status_id: status }
 					]
 				}
 			});

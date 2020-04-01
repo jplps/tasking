@@ -12,7 +12,7 @@ module.exports = {
 
 			// Grabbing tasks and filtering open ones
 			const tasks = user.tasks.filter(task => {
-				if (task.status === 'open') {
+				if (task.status_id === 1) {
 					return true;
 				}
 				return false;
@@ -26,11 +26,12 @@ module.exports = {
 
 	async create(req, res) {
 		const { user_id } = req;
-		const { description, type, status } = req.body;
+		const { description, type } = req.body;
 
 		try {
+			// Create a task with "open" state (id: 1)
 			const task = await Task.create({
-				description, type, status, owner_id: user_id
+				description, type_id: type, status_id: 1, owner_id: user_id
 			});
 
 			return res.status(200).send(task);
@@ -48,14 +49,14 @@ module.exports = {
 				where: { id }
 			});
 
-			// If the task is done, status = closed, set finished_at
+			// If the task is done, status_id = 2 ("closed"), set finished_at
 			let finished_at = null;
-			if (status === "closed") {
+			if (status === 2) {
 				finished_at = new Date();
 			}
 
 			// Update it
-			await task.update({ description, type, status, finished_at });
+			await task.update({ description, type_id: type, status_id: status, finished_at });
 
 			return res.status(200).send(task);
 
