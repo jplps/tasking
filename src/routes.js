@@ -1,5 +1,6 @@
 const express = require('express');
 
+const DepartmentController = require('./controllers/DepartmentController');
 const UserController = require('./controllers/UserController');
 const TaskController = require('./controllers/TaskController');
 const ReportController = require('./controllers/ReportController');
@@ -22,6 +23,11 @@ routes.get('/users', authMiddleware, checkRole, UserController.read);
 routes.delete('/users', authMiddleware, checkRole, UserController.delete);
 
 // Department
+routes.post('/departments', authMiddleware, DepartmentController.create);
+routes.get('/departments', authMiddleware, DepartmentController.read);
+routes.put('/departments', authMiddleware, DepartmentController.update);
+routes.delete('/departments', authMiddleware, checkRole, DepartmentController.delete);
+
 
 // Tasks CRUD
 routes.post('/tasks', authMiddleware, TaskController.create);
