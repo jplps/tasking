@@ -4,8 +4,6 @@ async function check(user_id, res, next) {
 	try {
 		const user = await User.findOne({ where: { id: user_id } });
 
-		console.log(user);
-
 		if (user.role === 'AGENT') return res.status(401).send({ err: 'You cannot perform this task.' })
 		if (user.role === 'ADMIN') return next();
 	} catch (err) {

@@ -26,6 +26,16 @@ module.exports = {
         allowNull: false,
         defaultValue: 'AGENT',
       },
+      // External key - User belongs to a department
+      department_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'departments',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,

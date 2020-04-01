@@ -14,9 +14,12 @@ class User extends Model {
 		})
 	}
 
-	// Create tasks relation
+	// Create Relations
 	static associate(models) {
+		// User has many tasks
 		this.hasMany(models.Task, { foreignKey: 'owner_id', as: 'tasks' });
+		// User belongs to a Department
+		this.belongsTo(models.Department, { foreignKey: 'department_id', as: 'department' });
 	}
 }
 

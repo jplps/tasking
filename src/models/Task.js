@@ -16,6 +16,7 @@ class Task extends Model {
 
 	// Creating the user relation
 	static associate(models) {
+		// A task belongs to a user
 		this.belongsTo(models.User, { foreignKey: 'owner_id', as: 'owner' });
 	}
 }

@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      // External key
+      // External key - Task belongs to a user
       owner_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
