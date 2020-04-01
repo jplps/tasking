@@ -17,7 +17,7 @@ module.exports = {
       type_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'types',
+          model: 'taskstypes',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -27,7 +27,7 @@ module.exports = {
       status_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'status',
+          model: 'tasksstatus',
           key: 'id',
         },
         onUpdate: 'CASCADE',

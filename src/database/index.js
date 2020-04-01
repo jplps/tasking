@@ -20,6 +20,7 @@ TaskActivity.init(connection);
 
 User.associate(connection.models);
 Task.associate(connection.models);
+Department.associate(connection.models);
 TaskStatus.associate(connection.models);
 TaskType.associate(connection.models);
 TaskActivity.associate(connection.models);
