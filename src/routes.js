@@ -12,26 +12,27 @@ const checkRole = require('./middlewares/checkRole');
 
 const routes = express.Router();
 
-// Authentication
+// Authentication - OK
 routes.post('/auth/signup', AuthController.signUp);
 routes.post('/auth/signin', AuthController.signIn);
 
-// Users CRUD - Only ADMIN access
+// Users CRUD - Only ADMIN access - OK
 routes.post('/users', authMiddleware, checkRole, UserController.create);
 routes.get('/users', authMiddleware, checkRole, UserController.read);
-// Bellow method not working. See the warning inside it!
+// Bellow method not working propperly. See the warning inside it!
 // routes.put('/users', authMiddleware, checkRole, UserController.update);
 routes.delete('/users', authMiddleware, checkRole, UserController.delete);
 
-// Departments CRUD - Only ADMIN access
+// Departments CRUD - Only ADMIN access - OK
 routes.post('/departments', authMiddleware, checkRole, DepartmentController.create);
 routes.get('/departments', authMiddleware, checkRole, DepartmentController.read);
 routes.put('/departments', authMiddleware, checkRole, DepartmentController.update);
 routes.delete('/departments', authMiddleware, checkRole, DepartmentController.delete);
 
-// Tasks CRUD
+// Tasks CRUD - WARNING
 routes.post('/tasks', authMiddleware, TaskController.create);
 routes.get('/tasks', authMiddleware, TaskController.read);
+// Successfully creating tasks, but could not create blongs to many association
 routes.put('/tasks', authMiddleware, TaskController.update);
 // AGENT cannot delete tasks
 routes.delete('/tasks', authMiddleware, checkRole, TaskController.delete);
@@ -40,7 +41,7 @@ routes.delete('/tasks', authMiddleware, checkRole, TaskController.delete);
 routes.post('/activities', authMiddleware, TaskController.create);
 routes.put('/activities', authMiddleware, TaskController.update);
 
-// Reports - Logged access
+// Reports - Logged access - OK
 routes.get('/tasks/byuser', authMiddleware, ReportController.tasksByUser);
 // Bellow method not working. See the warning inside it!
 // routes.get('/report/tasks/bydate', authMiddleware, ReportController.tasksByDate);

@@ -15,12 +15,12 @@ module.exports = {
 	},
 
 	async create(req, res) {
-		const { name, email } = req.body;
+		const { name, email, department } = req.body;
 
 		try {
 			const password = await bcrypt.hash(req.body.password, 10);
 
-			const user = await User.create({ name, email, password });
+			const user = await User.create({ name, email, password, department_id: department });
 
 			return res.status(200).send(user);
 		} catch (err) {

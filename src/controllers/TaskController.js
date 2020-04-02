@@ -24,14 +24,30 @@ module.exports = {
 		}
 	},
 
+	/*
+		*** WARNING ***
+
+		This method is creating a task, but type_id and status_id comes null.
+		Already tried including the association like this:
+
+		...
+			const typeId = await TaskType.findOne({where: {id: type}});
+			const statusId = await TaskType.findOne({where: {id: 1}});
+
+			const task = await Task.create({
+				description, owner_id: user_id
+			}, {include: [type, status]});
+		...
+
+	*/
 	async create(req, res) {
 		const { user_id } = req;
-		const { description, type } = req.body;
+		const { description, type_id } = req.body;
 
 		try {
 			// Create a task with "open" state (id: 1)
 			const task = await Task.create({
-				description, type_id: type, status_id: 1, owner_id: user_id
+				description, type_id, status_id: 1, owner_id: user_id
 			});
 
 			return res.status(200).send(task);
@@ -41,7 +57,7 @@ module.exports = {
 	},
 
 	async update(req, res) {
-		const { id, description, type, status } = req.body;
+		const { id, description, type_id, status_id } = req.body;
 
 		try {
 			// Finding task
@@ -51,16 +67,17 @@ module.exports = {
 
 			// If the task is done, status_id = 2 ("closed"), set finished_at
 			let finished_at = null;
-			if (status === 2) {
+			if (status_id === 2) {
 				finished_at = new Date();
 			}
 
 			// Update it
-			await task.update({ description, type_id: type, status_id: status, finished_at });
+			await task.update({ description, type_id, status_id, finished_at });
 
 			return res.status(200).send(task);
 
 		} catch (err) {
+			console.log(err);
 			return res.status(400).send({ err });
 		}
 	},
