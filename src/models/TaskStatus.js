@@ -14,7 +14,7 @@ class TaskStatus extends Model {
 	// Creating the user relation
 	static associate(models) {
 		// A task status belongs to many tasks
-		this.belongsToMany(models.Task, { through: 'tasksstatus', foreignKey: 'task_id', as: 'status' });
+		this.belongsToMany(models.Task, { through: 'status', foreignKey: 'task_id', as: 'status' });
 	}
 }
 

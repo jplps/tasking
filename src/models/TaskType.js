@@ -14,7 +14,7 @@ class TaskType extends Model {
 	// Creating the user relation
 	static associate(models) {
 		// A task type belongs to many tasks
-		this.belongsToMany(models.Task, { through: 'taskstypes', foreignKey: 'task_id', as: 'type' });
+		this.belongsToMany(models.Task, { through: 'types', foreignKey: 'task_id', as: 'type' });
 	}
 }
 

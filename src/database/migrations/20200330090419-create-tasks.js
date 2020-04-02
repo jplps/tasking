@@ -13,26 +13,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      // External key - Task has a type
-      type_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'taskstypes',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      // External key - Task has a status
-      status_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'tasksstatus',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
       // External key - Task belongs to a user
       owner_id: {
         type: Sequelize.INTEGER,

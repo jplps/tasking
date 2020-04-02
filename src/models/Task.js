@@ -20,7 +20,7 @@ class Task extends Model {
 		this.hasOne(models.TaskType, { foreignKey: 'type_id', as: 'type' });
 		this.hasOne(models.TaskStatus, { foreignKey: 'status_id', as: 'status' });
 		// A task can have many activities
-		this.hasMany(models.TaskActivity, { foreignKey: 'task_id', as: 'activities' });
+		this.hasMany(models.TaskActivity, { as: 'activities' });
 	}
 }
 
